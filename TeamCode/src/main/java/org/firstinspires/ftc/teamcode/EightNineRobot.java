@@ -32,6 +32,8 @@ public class EightNineRobot {
     public DcMotor SweeperExtends;
     //Mineral Dump
     public DcMotor MineralRaise;
+    //Mineral Dump
+    public DcMotor intakeMotor;
 
     //Sweep in servo
     public CRServo Sweeper;
@@ -79,6 +81,8 @@ public class EightNineRobot {
 
         MineralRaise = hwmap.dcMotor.get("MineralRaise");
 
+        intakeMotor = hwmap.dcMotor.get("intakeMotor");
+
         //Servos
         Sweeper = hwmap.crservo.get("Sweeper");
 
@@ -102,6 +106,7 @@ public class EightNineRobot {
         Latch.setPower(0);
         SweeperExtends.setPower(0);
         MineralRaise.setPower(0);
+        intakeMotor.setPower(0);
         //Servos
         Sweeper.setPower(0);
 
@@ -117,6 +122,7 @@ public class EightNineRobot {
         Latch.setDirection(FORWARD);
         SweeperExtends.setDirection(FORWARD);
         MineralRaise.setDirection(FORWARD);
+        intakeMotor.setDirection(FORWARD);
 
         FRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         FLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -125,6 +131,7 @@ public class EightNineRobot {
         Latch.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         SweeperExtends.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         MineralRaise.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         BLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         BRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -139,6 +146,9 @@ public class EightNineRobot {
 
         MineralRaise.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         MineralRaise.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        intakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
@@ -182,6 +192,7 @@ public class EightNineRobot {
         Latch.setPower(0);
         SweeperExtends.setPower(0);
         MineralRaise.setPower(0);
+        intakeMotor.setPower(0);
    }
 
 }
