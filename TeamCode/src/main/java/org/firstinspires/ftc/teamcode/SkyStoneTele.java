@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD;
@@ -12,6 +13,8 @@ import static com.qualcomm.robotcore.util.Range.scale;
 
 public class SkyStoneTele extends OpMode {
 
+    ImportantStuff robot = new ImportantStuff();
+
     static final double INCREMENT   = .3;     // amount to ramp motor each CYCLE_MS cycle
     static final int    CYCLE_MS    =   50;     // period of each cycle
     static final double MAX_FWD     =  1.0;     // Maximum FWD power applied to motor
@@ -20,36 +23,22 @@ public class SkyStoneTele extends OpMode {
     double  power   = 0;
     boolean rampUp  = true;
 
-    DcMotor FLeft;
-    DcMotor FRight;
-    DcMotor BLeft;
-    DcMotor BRight;
-
-    DcMotor intakeMotor;
+//    DcMotor liftUp;
+//    DcMotor liftOut;
 
     @Override
     public void init() {
 
-        FLeft = hardwareMap.dcMotor.get("FLeft");
-        FRight = hardwareMap.dcMotor.get("FRight");
-        BLeft = hardwareMap.dcMotor.get("BLeft");
-        BRight = hardwareMap.dcMotor.get("BRight");
+        robot.init(hardwareMap, telemetry);
 
-        intakeMotor = hardwareMap.dcMotor.get("intakeMotor");
+//        liftUp = hardwareMap.dcMotor.get("liftUp");
+//        liftOut = hardwareMap.dcMotor.get("liftOut");
 
-        FLeft.setMode(RUN_WITHOUT_ENCODER);
-        FRight.setMode(RUN_WITHOUT_ENCODER);
-        BLeft.setMode(RUN_WITHOUT_ENCODER);
-        BRight.setMode(RUN_WITHOUT_ENCODER);
+//        liftUp.setMode(RUN_WITHOUT_ENCODER);
+//        liftOut.setMode(RUN_WITHOUT_ENCODER);
 
-        intakeMotor.setMode(RUN_WITHOUT_ENCODER);
-
-        BLeft.setDirection(FORWARD);
-        FLeft.setDirection(FORWARD);
-        FRight.setDirection(REVERSE);
-        BRight.setDirection(REVERSE);
-
-        intakeMotor.setDirection(FORWARD);
+//        liftUp.setDirection(FORWARD);
+//        liftOut.setDirection(FORWARD);
     }
 
     @Override
@@ -75,32 +64,60 @@ public class SkyStoneTele extends OpMode {
 
 
 
-        FLeft.setPower(scale(speed + direction - strafe, -Magnitude, Magnitude, -.5, .5));
-        FRight.setPower(scale(speed - direction + strafe, -Magnitude, Magnitude, -.5, .5));
-        BLeft.setPower(scale(speed + direction + strafe, -Magnitude, Magnitude, -.5, .5));
-        BRight.setPower(scale(speed - direction - strafe, -Magnitude, Magnitude, -.5, .5));
+        robot.robotStuff.FLeft.setPower(scale(speed + direction - strafe, -Magnitude, Magnitude, -.5, .5));
+        robot.robotStuff.FRight.setPower(scale(speed - direction + strafe, -Magnitude, Magnitude, -.5, .5));
+        robot.robotStuff.BLeft.setPower(scale(speed + direction + strafe, -Magnitude, Magnitude, -.5, .5));
+        robot.robotStuff.BRight.setPower(scale(speed - direction - strafe, -Magnitude, Magnitude, -.5, .5));
 
         float forwardIntake = gamepad1.right_trigger;
         float reverseIntake = -gamepad1.left_trigger;
 
-        if (forwardIntake > .6){
-            forwardIntake = (float) .6;
+        if (forwardIntake > .5){
+            forwardIntake = (float) .5;
         }
 
-        if (reverseIntake > .6){
-            reverseIntake = (float) .6;
+        if (reverseIntake < -.5){
+            reverseIntake = (float) -.5;
         }
 
         if (gamepad1.right_trigger > .1){
-            intakeMotor.setPower(forwardIntake);
+            robot.robotStuff.intakeMotor.setPower(forwardIntake);
         }
         else if (gamepad1.left_trigger > .1){
-            intakeMotor.setPower(reverseIntake);
+            robot.robotStuff.intakeMotor.setPower(reverseIntake);
         }
         else {
-            intakeMotor.setPower(0);
+            robot.robotStuff.intakeMotor.setPower(0);
         }
-        telemetry.addData("IntakeSpeed", intakeMotor.getPower());
+        telemetry.addData("IntakeSpeed", robot.robotStuff.intakeMotor.getPower());
 
+        if (gamepad1.left_bumper && robot.robotStuff.leftHook.getPosition()==robot.robotStuff.SERVO_LATCH_UP){
+            robot.robotStuff.leftHook.setPosition(robot.robotStuff.SERVO_LATCH_DOWN);
+            robot.robotStuff.rightHook.setPosition(robot.robotStuff.SERVO_LATCH_DOWN);
+        }
+        else if (gamepad1.left_bumper && robot.robotStuff.leftHook.getPosition()==robot.robotStuff.SERVO_LATCH_DOWN){
+            robot.robotStuff.leftHook.setPosition(robot.robotStuff.SERVO_LATCH_UP);
+            robot.robotStuff.rightHook.setPosition(robot.robotStuff.SERVO_LATCH_UP);
+        }
+
+//        if (gamepad1.a) {
+//            liftOut.setPower(1);
+//        }
+//        else if (gamepad1.b){
+//            liftOut.setPower(-1);
+//        }
+//        else {
+//            liftOut.setPower(0);
+//        }
+//
+//        if (gamepad1.y){
+//            liftUp.setPower(1);
+//        }
+//        else if (gamepad1.x){
+//            liftUp.setPower(-1);
+//        }
+//        else {
+//            liftUp.setPower(0);
+//        }
     }
 }
